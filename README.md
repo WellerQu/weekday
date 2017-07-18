@@ -45,3 +45,23 @@ optional arguments:
   -l, --list            list all the unpost report
   -c, --clean           clean current report
 ```
+
+## example
+
+If you just only have one information, do it like this:
+
+```
+wp -a "My work is done" -p
+```
+
+If you have more infomation, do it like this:
+
+```
+wp -e -p
+```
+
+If you just record information and won't post mail
+
+```
+wp -a "some work"
+```
