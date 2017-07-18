@@ -3,9 +3,15 @@
 
 import argparse
 import os
-import datetime
+import sys
 import ConfigParser
+import smtplib
+import mistune
+from datetime import datetime
+from email.mime.text import MIMEText
+from email.header import Header
 from pydash.objects import defaults
+from colorama import init, Fore
 
 APP_DESC = '''
 Author:         Nix
@@ -52,11 +58,16 @@ def main():
         append(tmpFileName, args.append)
 
     if args.edit:
-        edit(tmpFileName, editor=conf.editor)
+        edit(tmpFileName, editor=conf['editor'])
 
     if args.post:
-        os.remove(tmpFileName)
-        print datetime.now().strftime('%Y-%m-%d')
+        post(tmpFileName,
+             from_email=conf['from_email'],
+             sender_nickname=conf['sender_nickname'],
+             password=conf['sender_password'],
+             to_email=conf['to_email'],
+             cc=conf['cc'],
+             host=conf['smtp_host'])
 
     if args.list:
         listContent(tmpFileName)
@@ -70,6 +81,12 @@ def loadConfig(configName):
             config = ConfigParser.ConfigParser()
             config.readfp(r)
             conf['editor'] = config.get('global', 'editor')
+            conf['to_email'] = config.get('to', 'email')
+            conf['cc'] = config.get('to', 'cc')
+            conf['from_email'] = config.get('from', 'email')
+            conf['sender_nickname'] = config.get('from', 'nickname')
+            conf['sender_password'] = config.get('from', 'password')
+            conf['smtp_host'] = config.get('SMTP', 'host')
 
     return defaults(conf, {'editor': 'vim'})
 
@@ -84,11 +101,57 @@ def edit(fileName, **conf):
 
 
 def listContent(fileName):
-    with open(fileName, 'r') as r:
-        line = r.readline().rstrip('\r\n')
-        while line:
-            print line
+    if os.path.exists(fileName):
+        with open(fileName, 'r') as r:
             line = r.readline().rstrip('\r\n')
+            while line:
+                print line
+                line = r.readline().rstrip('\r\n')
+
+
+def post(fileName, **conf):
+    '''post email'''
+    date = datetime.now().strftime('%Y-%m-%d')
+    dir = os.path.dirname(fileName)
+    content = ''
+
+    if os.path.exists(fileName):
+        with open(fileName, 'r') as r:
+            content = r.read()
+
+    if len(content) > 0:
+        content = mistune.markdown(content, escape=True, hard_wrap=True)
+        hFrom = Header(conf['sender_nickname'], 'utf-8')
+        hFrom.append('<%s>\r\n' % conf['from_email'], 'utf-8')
+
+        TO_ADDR = conf['to_email'].split(',')
+        CC_ADDR = conf['cc'].split(',')
+
+        hTo = ', '.join(TO_ADDR)
+        hCc = ', '.join(CC_ADDR)
+
+        msg = MIMEText(content, 'html', 'utf-8')
+        msg['Subject'] = u'工作周报 %s\r\n' % date
+        msg['From'] = hFrom
+        msg['To'] = hTo
+        msg['Cc'] = hCc
+
+        smtp = smtplib.SMTP(conf['host'])
+        smtp.login(conf['from_email'], conf['password'])
+        smtp.sendmail(conf['from_email'],
+                      TO_ADDR + CC_ADDR,
+                      msg.as_string())
+        smtp.close()
+
+        os.rename(fileName, os.path.join(dir, '%s.rp' % date))
+
+        init(autoreset=True)
+        print Fore.GREEN + 'send successfully'
+    else:
+        print 'nothing to send'
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        sys.argv.append('-h')
+
     main()
