@@ -1,0 +1,14 @@
+[global]
+editor = vim
+
+[to]
+email = 
+cc = 
+
+[from]
+email = 
+password = 
+nickname = 
+
+[SMTP]
+host = smtp.exmail.qq.com

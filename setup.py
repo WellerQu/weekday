@@ -1,11 +1,23 @@
 #!/usr/bin/env python
 # -*- encoding: UTF-8 -*-
+
 from setuptools import setup, find_packages
+import shutil
+import os
+
 """
 打包的用的setup必须引入，
 """
 
 VERSION = '1.0.0'
+
+confPath = os.path.join(os.environ['HOME'], '.weekday/conf')
+dirPath = os.path.dirname(confPath)
+
+if not os.path.exists(dirPath):
+    os.mkdir(dirPath)
+
+shutil.copyfile('conf', confPath)
 
 setup(name='wp',
       version=VERSION,
