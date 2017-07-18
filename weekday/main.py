@@ -39,6 +39,9 @@ def main():
     parser.add_argument('-l', '--list',
                         action='store_true',
                         help='list all the unpost report')
+    parser.add_argument('-c', '--clean',
+                        action='store_true',
+                        help='clean current report')
 
     args = parser.parse_args()
 
@@ -71,6 +74,9 @@ def main():
 
     if args.list:
         listContent(tmpFileName)
+
+    if args.clean:
+        clean(tmpFileName)
 
 
 def loadConfig(configName):
@@ -150,7 +156,13 @@ def post(fileName, **conf):
     else:
         print 'nothing to send'
 
+
+def clean(fileName):
+    if os.path.exists(fileName):
+        os.remove(fileName)
+
 if __name__ == '__main__':
+    print sys.argv
     if len(sys.argv) == 1:
         sys.argv.append('-h')
 
