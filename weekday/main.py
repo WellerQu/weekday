@@ -7,6 +7,7 @@ import sys
 import ConfigParser
 import smtplib
 import mistune
+import shutil
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.header import Header
@@ -19,38 +20,16 @@ Github:         https://github.com/WellerQu/weekday
 Version:        1.0.0
 '''
 
+init(autoreset=True)
+
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Tell your leader what you did this week')
-
-    # define command line parameters
-    parser.add_argument('-v', '--version',
-                        action='store_true',
-                        help='show the version information')
-    parser.add_argument('-e', '--edit',
-                        action='store_true',
-                        help='open default editor for editing report')
-    parser.add_argument('-a', '--append',
-                        help='what did you do today?')
-    parser.add_argument('-p', '--post',
-                        action='store_true',
-                        help='post the specified report to your leader e-mail')
-    parser.add_argument('-l', '--list',
-                        action='store_true',
-                        help='list all the unpost report')
-    parser.add_argument('-c', '--clean',
-                        action='store_true',
-                        help='clean current report')
-
-    args = parser.parse_args()
-
+    args = initializeArguments()
     tmpFileName = ('%s/.weekday/current.rp' % os.environ['HOME'])
     confFileName = ('%s/.weekday/conf' % os.environ['HOME'])
-
     conf = loadConfig(confFileName)
-
     dir = os.path.dirname(tmpFileName)
+
     if not os.path.exists(dir):
         os.mkdir(dir)
 
@@ -77,6 +56,65 @@ def main():
 
     if args.clean:
         clean(tmpFileName)
+
+    if args.restore:
+        restore(confFileName)
+
+    if args.backup:
+        backup(confFileName)
+
+    baseOutput(conf)
+
+
+def initializeArguments():
+    parser = argparse.ArgumentParser(
+        description='Tell your leader what you did this week')
+
+    # define command line parameters
+    parser.add_argument('-v', '--version',
+                        action='store_true',
+                        help='show the version information')
+    parser.add_argument('-e', '--edit',
+                        action='store_true',
+                        help='open default editor for editing report')
+    parser.add_argument('-a', '--append',
+                        help='what did you do today?')
+    parser.add_argument('-p', '--post',
+                        action='store_true',
+                        help='post the specified report to your leader e-mail')
+    parser.add_argument('-l', '--list',
+                        action='store_true',
+                        help='list all the unpost report')
+    parser.add_argument('-c', '--clean',
+                        action='store_true',
+                        help='clean current report')
+
+    group = parser.add_mutually_exclusive_group()
+
+    group.add_argument('-r', '--restore',
+                       action='store_true',
+                       help='restore lastest configuration file')
+    group.add_argument('-b', '--backup',
+                       action='store_true',
+                       help='backup current configuration file')
+
+    return parser.parse_args()
+
+
+def baseOutput(conf):
+    print '\r\n'
+
+    if 'from_email' in conf and conf['from_email']:
+        print 'From: %s<%s%s%s>' % (conf['sender_nickname'],
+                                    Fore.GREEN,
+                                    conf['from_email'],
+                                    Fore.RESET)
+
+    if 'to_email' in conf and conf['to_email']:
+        print 'To: %s%s' % (Fore.GREEN, conf['to_email'])
+
+    if 'cc' in conf and conf['cc']:
+        print 'Cc: %s%s' % (Fore.GREEN, conf['cc'])
 
 
 def loadConfig(configName):
@@ -151,18 +189,31 @@ def post(fileName, **conf):
 
         os.rename(fileName, os.path.join(dir, '%s.rp' % date))
 
-        init(autoreset=True)
-        print Fore.GREEN + 'send successfully'
+        print Fore.GREEN + 'Send successfully'
     else:
-        print 'nothing to send'
+        print 'Nothing to send'
 
 
 def clean(fileName):
     if os.path.exists(fileName):
         os.remove(fileName)
 
+
+def restore(fileName):
+    backupFile = '%s.bak' % fileName
+    if os.path.exists(backupFile):
+        shutil.copyfile(backupFile, fileName)
+        print Fore.GREEN + 'Restore successfully'
+    else:
+        print Fore.RED + 'Backup configuration is not exisits'
+
+
+def backup(fileName):
+    if os.path.exists(fileName):
+        shutil.copyfile(fileName, '%s.bak' % fileName)
+        print Fore.GREEN + 'Backup successfully'
+
 if __name__ == '__main__':
-    print sys.argv
     if len(sys.argv) == 1:
         sys.argv.append('-h')
 
