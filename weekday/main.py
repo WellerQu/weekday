@@ -51,11 +51,11 @@ def main():
              cc=conf['cc'],
              host=conf['smtp_host'])
 
-    if args.list:
-        listContent(tmpFileName)
-
     if args.clean:
         clean(tmpFileName)
+
+    if args.list:
+        listContent(tmpFileName)
 
     if args.restore:
         restore(confFileName)
