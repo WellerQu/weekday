@@ -31,7 +31,7 @@ host = smtp.exmail.qq.com
 ## usage
 
 ```
-usage: wp [-h] [-v] [-e] [-a APPEND] [-p] [-l] [-c]
+usage: wp [-h] [-v] [-e] [-a APPEND] [-p] [-l] [-c] [-r | -b]
 
 Tell your leader what you did this week
 
@@ -44,6 +44,8 @@ optional arguments:
   -p, --post            post the specified report to your leader e-mail
   -l, --list            list all the unpost report
   -c, --clean           clean current report
+  -r, --restore         restore lastest configuration file
+  -b, --backup          backup current configuration file
 ```
 
 ## example
