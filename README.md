@@ -9,7 +9,7 @@ python setup.py install
 
 ## configuration
 
-save configuration file to your home dir "~"
+save configuration file to your home dir "~/.weekday/"
 
 ```
 [global]
