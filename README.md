@@ -67,3 +67,23 @@ If you just record information and won't post mail
 ```
 wp -a "some work"
 ```
+
+## auto send E-mail
+
+You can also use `wp` with [crontab](http://man.linuxde.net/crontab). It can help you to set a task that to send an E-mail every 18:00 friday like this:
+
+```
+SHELL=/bin/zsh
+PATH=/usr/local/bin
+HOME=/Users/nixon
+
+# run tasks
+# minute hour day month week command
+0 18 * * 5 wp -p
+```
+
+## TODO
+
+- Report template
+- Support Windows OS
+- Unit Test (with CI)
