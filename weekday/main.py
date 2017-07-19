@@ -159,6 +159,14 @@ def post(fileName, **conf):
     dir = os.path.dirname(fileName)
     content = ''
 
+    if 'from_email' not in conf or not conf['from_email']:
+        print Fore.RED + 'from_email is required'
+        return
+
+    if 'to_email' not in conf or not conf['to_email']:
+        print Fore.RED + 'to_email is required'
+        return
+
     if os.path.exists(fileName):
         with open(fileName, 'r') as r:
             content = r.read()
