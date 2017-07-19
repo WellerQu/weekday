@@ -24,6 +24,9 @@ init(autoreset=True)
 
 
 def main():
+    if len(sys.argv) < 2:
+        sys.argv.append('-h')
+
     args = initializeArguments()
     tmpFileName = ('%s/.weekday/current.rp' % os.environ['HOME'])
     confFileName = ('%s/.weekday/conf' % os.environ['HOME'])
@@ -222,7 +225,4 @@ def backup(fileName):
         print Fore.GREEN + 'Backup successfully'
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        sys.argv.append('-h')
-
     main()
