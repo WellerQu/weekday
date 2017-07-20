@@ -50,13 +50,13 @@ optional arguments:
 
 ## example
 
-If you just only have one information, do it like this:
+If you just only have one information, like this:
 
 ```
 wp -a "My work is done" -p
 ```
 
-If you have more infomation, do it like this:
+If you have more infomation, like this:
 
 ```
 wp -e -p
@@ -70,7 +70,7 @@ wp -a "some work"
 
 ## auto send E-mail
 
-You can also use `wp` with [crontab](http://man.linuxde.net/crontab). It can help you to set a task that to send an E-mail every 18:00 friday like this:
+You can also use `wp` with [crontab](http://man.linuxde.net/crontab). It can help you to set a task that to send an E-mail every 18:00 friday, like this:
 
 ```
 SHELL=/bin/zsh
