@@ -1,5 +1,5 @@
 # weekday
-小工具 - 用来告诉老板, 我这周干了啥. 主要是通过电子邮件来发送周报.
+An easy tool for tell your leader what you did.
 
 ## install
 
@@ -87,3 +87,4 @@ HOME=/Users/nixon
 - Report template
 - Support Windows OS
 - Unit Test (with CI)
+- Read git log for E-mail content
