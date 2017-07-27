@@ -1,5 +1,7 @@
 # weekday
-小工具 - 用来告诉老板, 我这周干了啥. 主要是通过电子邮件来发送周报.
+An easy tool for tell your leader what you did.
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ## install
 
@@ -50,13 +52,13 @@ optional arguments:
 
 ## example
 
-If you just only have one information, do it like this:
+If you just only have one information, like this:
 
 ```
 wp -a "My work is done" -p
 ```
 
-If you have more infomation, do it like this:
+If you have more infomation, like this:
 
 ```
 wp -e -p
@@ -70,7 +72,7 @@ wp -a "some work"
 
 ## auto send E-mail
 
-You can also use `wp` with [crontab](http://man.linuxde.net/crontab). It can help you to set a task that to send an E-mail every 18:00 friday like this:
+You can also use `wp` with [crontab](http://man.linuxde.net/crontab). It can help you to set a task that to send an E-mail every 18:00 friday, like this:
 
 ```
 SHELL=/bin/zsh
@@ -87,3 +89,4 @@ HOME=/Users/nixon
 - Report template
 - Support Windows OS
 - Unit Test (with CI)
+- Read git log for E-mail content
