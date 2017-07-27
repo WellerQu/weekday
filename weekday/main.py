@@ -59,14 +59,13 @@ def main():
 
     if args.list:
         listContent(tmpFileName)
+        baseOutput(conf)
 
     if args.restore:
         restore(confFileName)
 
     if args.backup:
         backup(confFileName)
-
-    baseOutput(conf)
 
 
 def initializeArguments():
